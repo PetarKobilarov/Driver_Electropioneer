@@ -1,0 +1,9 @@
+10.01.2014
+
+Radjen zajedno sa Savom, kada nas je zajebavao i nije hteo da pogleda koja je bila poslednja verzija u MPLAB-u
+
+radi regulacija,
+radi komunikacija
+
+robot je bio samo ploca i konstrukcija, treba bolje namestiti tockove za kretanje i odometriske
+

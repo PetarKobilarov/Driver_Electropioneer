@@ -1,0 +1,111 @@
+#include    "init.h"
+#include    "pwm.h"
+
+void UARTinit()
+{
+    CloseUART1();
+
+    U1MODEbits.STSEL = 0;   // 1 Stop bit
+    U1MODEbits.PDSEL = 0;   // No Parity, 8 data bits
+    U1MODEbits.BRGH = 0;    // Low-Speed mode - ovde je bila nula!
+    U1BRG = 31;             // BAUD Rate Setting for 57600
+    U1MODEbits.UARTEN = 1;  // Enable UART
+    U1STAbits.UTXEN = 1;
+    IFS0bits.U1RXIF = 0;
+}
+
+// 29.48MHz
+// str 23
+void PWMinit()
+{	
+    CloseMCPWM();
+
+// init PWM1
+// Free Running mode
+    P1TCONbits.PTEN = 0;
+    PWM1CON1bits.PMOD1 = 1; // Indepedent output mode
+    PWM1CON1bits.PEN1H = 0; // enable pwm pin for pwm
+    PWM1CON1bits.PEN1L = 1; // enable pwm pin for pwm
+    P1TMR = 1;
+    P1TPER = 1627;//1599; // frekvencija PWM- a : 18425Hz
+    P1DC1 = 0;
+    P1TCONbits.PTEN = 1;
+
+// init PWM2
+
+    P2TCONbits.PTEN = 0;
+    PWM2CON1bits.PMOD1 = 1; 
+    PWM2CON1bits.PEN1H = 0;
+    PWM2CON1bits.PEN1L = 1;
+    P2TPER = 1627;//1599;
+    P2DC1 = 0;
+    P2TCONbits.PTEN = 1;
+}
+
+void TimerInit()
+{
+    IEC0bits.T1IE = 0;      /* Disable the Timer1 interrupt */
+    T1CONbits.TON = 0;      /* Disable timer1 */
+    IFS0bits.T1IF = 0;      /* Clear Timer interrupt flag */
+
+    T1CONbits.TGATE = 0;
+    T1CONbits.TCKPS = 0;
+    T1CONbits.TCS = 0;
+
+    TMR1 = 0;
+    PR1 = 30000;//29479;    // Fclk / 1000
+
+    IFS0bits.T1IF = 0;// Clear Timer1 Interrupt Flag
+    IEC0bits.T1IE = 1;// Enable Timer1 interrupt
+    T1CONbits.TON = 1;
+}
+
+void QEIinit()
+{
+    //konfigurisi registre:
+    QEI1CONbits.POSRES=0;       //index impuls ne resetuje brojac
+    QEI1CONbits.TQCS=1;         //brojac broji impulse sa QEA ulaza
+    QEI1CONbits.UPDN_SRC=1;     //za to vreme QEB odredjuje smer brojanja
+    QEI1CONbits.QEIM=6;         //Quadrature Encoder Interface enabled (x4 mode) with index pulse reset of position counter
+    QEI1CONbits.TQCKPS=0;
+
+    MAX1CNT=0000;
+    POS1CNT=0;
+
+    //konfigurisi registre:
+    QEI2CONbits.POSRES=0;       //index impuls ne resetuje brojac
+    QEI2CONbits.TQCS=1;         //brojac broji impulse sa QEA ulaza
+    QEI2CONbits.UPDN_SRC=1;     //za to vreme QEB odredjuje smer brojanja
+    QEI2CONbits.QEIM=6;         //Quadrature Encoder Interface enabled (x4 mode) with index pulse reset of position counter
+    QEI2CONbits.TQCKPS=0;
+
+    MAX2CNT=0000;
+    POS2CNT=0;
+}
+
+void PortInit()
+{
+
+    TRISAbits.TRISA4=0;
+
+    TRISBbits.TRISB8=0;
+    TRISBbits.TRISB9=0;
+    TRISBbits.TRISB10=0;
+    TRISBbits.TRISB11=0;
+    TRISBbits.TRISB12=0;
+    TRISBbits.TRISB13=0;
+    TRISBbits.TRISB14=0;
+    TRISBbits.TRISB15=0;
+
+    LATAbits.LATA4 = 0;
+
+    LATBbits.LATB8 = 0;
+    LATBbits.LATB9 = 0;
+    LATBbits.LATB10 = 0;
+    LATBbits.LATB11 = 0;
+    LATBbits.LATB12 = 0;
+    LATBbits.LATB13 = 0;
+    LATBbits.LATB14 = 0;
+    LATBbits.LATB15 = 0;
+}
+
